@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects Portfolio</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.294.0/font/lucide.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            padding: 60px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 64px;
+            animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.03em;
+        }
+
+        .header-badge {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 40px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .filter-tab {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #9ca3af;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .filter-tab:hover,
+        .filter-tab.active {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+            margin-bottom: 80px;
+        }
+
+        /* Project Card */
+        .project-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
+
+        .project-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .project-thumbnail {
+            height: 200px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                );
+        }
+
+        .project-icon-large {
+            width: 64px;
+            height: 64px;
+            color: rgba(255, 255, 255, 0.4);
+            z-index: 1;
+        }
+
+        .project-content {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .project-title-wrapper {
+            flex: 1;
+        }
+
+        .project-category {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+
+        .project-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .status-live {
+            background: rgba(16, 185, 129, 0.1);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .status-progress {
+            background: rgba(251, 191, 36, 0.1);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .project-description {
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.9375rem;
+            flex-grow: 1;
+        }
+
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tech-tag {
+            background: rgba(255, 255, 255, 0.04);
+            color: #9ca3af;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s ease;
+        }
+
+        .project-card:hover .tech-tag {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .project-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #6b7280;
+            font-size: 0.875rem;
+            transition: color 0.2s ease;
+        }
+
+        .project-card:hover .project-link {
+            color: #ffffff;
+        }
+
+        .project-link i {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 100px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 32px;
+            margin-bottom: 24px;
+        }
+
+        .footer-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.9375rem;
+            transition: all 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: #ffffff;
+        }
+
+        .footer-link i {
+            width: 18px;
+            height: 18px;
+        }
+
+        .footer-text {
+            color: #4b5563;
+            font-size: 0.875rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project-card:nth-child(1) { animation-delay: 0.05s; }
+        .project-card:nth-child(2) { animation-delay: 0.1s; }
+        .project-card:nth-child(3) { animation-delay: 0.15s; }
+        .project-card:nth-child(4) { animation-delay: 0.2s; }
+        .project-card:nth-child(5) { animation-delay: 0.25s; }
+        .project-card:nth-child(6) { animation-delay: 0.3s; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 40px 16px;
+            }
+
+            .header {
+                margin-bottom: 48px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .project-content {
+                padding: 20px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <h1>Projects</h1>
+                <div class="header-badge">
+                    <span class="status-dot"></span>
+                    6 Projects
+                </div>
+            </div>
+            <p>Explore my latest work and experiments</p>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <div class="filter-tab active">All Projects</div>
+            <div class="filter-tab">Games</div>
+            <div class="filter-tab">Web Apps</div>
+            <div class="filter-tab">Experiments</div>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="projects-grid">
+            <!-- Project 1 -->
+            <a href="https://your-game-project.vercel.app" class="project-card" target="_blank">
+                <div class="project-thumbnail">
+                    <i data-lucide="gamepad-2" class="project-icon-large"></i>
+                </div>
+                <div class="project-content">
+                    <div class="project-header">
+                        <div class="project-title-wrapper">
+                            <div class="project-category">Game</div>
+                            <h3 class="project-title">게임 프로젝트 1</h3>
+                        </div>
+                        <div class="project-status status-live">
+                            <span class="status-dot"></span>
+                            Live
+                        </div>
+                    </div>
+                    <p class="project-description">
+                        재미있는 웹 기반 게임입니다. HTML5 캔버스를 사용하여 제작된 인터랙티브 게임 경험을 제공합니다.
+                    </p>
+                    <div class="project-footer">
+                        <div class="project-tech">
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">HTML5</span>
+                            <span class="tech-tag">CSS3</span>
+                        </div>
+                        <div class="project-link">
+                            <span>View</span>
+                            <i data-lucide="arrow-up-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Project 2 -->
+            <a href="https://your-second-project.vercel.app" class="project-card" target="_blank">
+                <div class="project-thumbnail">
+                    <i data-lucide="target" class="project-icon-large"></i>
+                </div>
+                <div class="project-content">
+                    <div class="project-header">
+                        <div class="project-title-wrapper">
+                            <div class="project-category">Game</div>
+                            <h3 class="project-title">게임 프로젝트 2</h3>
+                        </div>
+                        <div class="project-status status-live">
+                            <span class="status-dot"></span>
+                            Live
+                        </div>
+                    </div>
+                    <p class="project-description">
+                        React를 활용한 현대적인 게임 애플리케이션입니다. 부드러운 애니메이션과 반응형 디자인이 특징입니다.
+                    </p>
+                    <div class="project-footer">
+                        <div class="project-tech">
+                            <span class="tech-tag">React</span>
+                            <span class="tech-tag">Next.js</span>
+                        </div>
+                        <div class="project-link">
+                            <span>View</span>
+                            <i data-lucide="arrow-up-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Project 3 -->
+            <a href="https://your-third-project.vercel.app" class="project-card" target="_blank">
+                <div class="project-thumbnail">
+                    <i data-lucide="palette" class="project-icon-large"></i>
+                </div>
+                <div class="project-content">
+                    <div class="project-header">
+                        <div class="project-title-wrapper">
+                            <div class="project-category">Creative</div>
+                            <h3 class="project-title">크리에이티브 프로젝트</h3>
+                        </div>
+                        <div class="project-status status-progress">
+                            <span class="status-dot"></span>
+                            Beta
+                        </div>
+                    </div>
+                    <p class="project-description">
+                        창의적인 아이디어를 구현한 웹 애플리케이션입니다. 사용자 경험을 최우선으로 고려한 디자인입니다.
+                    </p>
+                    <div class="project-footer">
+                        <div class="project-tech">
+                            <span class="tech-tag">TypeScript</span>
+                            <span class="tech-tag">Tailwind</span>
+                        </div>
+                        <div class="project-link">
+                            <span>View</span>
+                            <i data-lucide="arrow-up-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Project 4 -->
+            <a href="https://your-fourth-project.vercel.app" class="project-card" target="_blank">
+                <div class="project-thumbnail">
+                    <i data-lucide="lightbulb" class="project-icon-large"></i>
+                </div>
+                <div class="project-content">
+                    <div class="project-header">
+                        <div class="project-title-wrapper">
+                            <div class="project-category">Utility</div>
+                            <h3 class="project-title">유틸리티 앱</h3>
+                        </div>
+                        <div class="project-status status-live">
+                            <span class="status-dot"></span>
+                            Live
+                        </div>
+                    </div>
+                    <p class="project-description">
+                        일상생활에 유용한 도구를 제공하는 웹 애플리케이션입니다. 간편하고 직관적인 인터페이스가 특징입니다.
+                    </p>
+                    <div class="project-footer">
+                        <div class="project-tech">
+                            <span class="tech-tag">Vue.js</span>
+                            <span class="tech-tag">Firebase</span>
+                        </div>
+                        <div class="project-link">
+                            <span>View</span>
+                            <i data-lucide="arrow-up-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Project 5 -->
+            <a href="https://your-fifth-project.vercel.app" class="project-card" target="_blank">
+                <div class="project-thumbnail">
+                    <i data-lucide="sparkles" class="project-icon-large"></i>
+                </div>
+                <div class="project-content">
+                    <div class="project-header">
+                        <div class="project-title-wrapper">
+                            <div class="project-category">Portfolio</div>
+                            <h3 class="project-title">포트폴리오 사이트</h3>
+                        </div>
+                        <div class="project-status status-live">
+                            <span class="status-dot"></span>
+                            Live
+                        </div>
+                    </div>
+                    <p class="project-description">
+                        개인 작업물을 효과적으로 전시하는 포트폴리오 웹사이트입니다. 미니멀하고 세련된 디자인이 돋보입니다.
+                    </p>
+                    <div class="project-footer">
+                        <div class="project-tech">
+                            <span class="tech-tag">HTML</span>
+                            <span class="tech-tag">CSS</span>
+                            <span class="tech-tag">JavaScript</span>
+                        </div>
+                        <div class="project-link">
+                            <span>View</span>
+                            <i data-lucide="arrow-up-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Project 6 -->
+            <a href="https://your-sixth-project.vercel.app" class="project-card" target="_blank">
+                <div class="project-thumbnail">
+                    <i data-lucide="smartphone" class="project-icon-large"></i>
+                </div>
+                <div class="project-content">
+                    <div class="project-header">
+                        <div class="project-title-wrapper">
+                            <div class="project-category">Mobile</div>
+                            <h3 class="project-title">모바일 앱</h3>
+                        </div>
+                        <div class="project-status status-progress">
+                            <span class="status-dot"></span>
+                            Beta
+                        </div>
+                    </div>
+                    <p class="project-description">
+                        모바일 환경에 최적화된 반응형 웹 애플리케이션입니다. 네이티브 앱과 같은 사용자 경험을 제공합니다.
+                    </p>
+                    <div class="project-footer">
+                        <div class="project-tech">
+                            <span class="tech-tag">React Native</span>
+                            <span class="tech-tag">Expo</span>
+                        </div>
+                        <div class="project-link">
+                            <span>View</span>
+                            <i data-lucide="arrow-up-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-content">
+                <a href="https://github.com/yourusername" class="footer-link" target="_blank">
+                    <i data-lucide="github"></i>
+                    <span>GitHub</span>
+                </a>
+                <a href="mailto:your.email@example.com" class="footer-link">
+                    <i data-lucide="mail"></i>
+                    <span>Email</span>
+                </a>
+                <a href="https://twitter.com/yourusername" class="footer-link" target="_blank">
+                    <i data-lucide="twitter"></i>
+                    <span>Twitter</span>
+                </a>
+                <a href="https://linkedin.com/in/yourusername" class="footer-link" target="_blank">
+                    <i data-lucide="linkedin"></i>
+                    <span>LinkedIn</span>
+                </a>
+            </div>
+            <p class="footer-text">&copy; 2024 All rights reserved</p>
+        </div>
+    </div>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
